@@ -10,6 +10,7 @@ import sendMessage from '../utils/emailConfig'
 import { validateLoginData } from '../schemas/loginSchema'
 import { validateUserRegister } from '../schemas/registerSchema'
 import { validateIdAndEmail, validateNewPassword } from '../schemas/recoverSchema'
+import { encrypt } from '../utils/encrypt'
 
 const loginRouter = express.Router()
 
@@ -38,7 +39,7 @@ loginRouter.post('/verify', async (req, res) => {
 
                 if (SECRET) {
                     const token = jwt.sign(userToken, SECRET, {expiresIn: "6h"})
-                    return res.status(200).json({ message: 'Usuario verificado con exito. Redirigiendo...', token, username: user[0].username, tipo_user: user[0].tipo_user, user_id: user[0].id_usuario })
+                    return res.status(200).json({ message: 'Usuario verificado con exito. Redirigiendo...', token, username: user[0].username, tipo_user: user[0].tipo_user, user_id: user[0].id_usuario, method: 'custom' })
                 } else {
                     return res.status(500).json({ message: 'No se pudo generar el token de autenticación.' })
                 }
@@ -210,6 +211,62 @@ loginRouter.patch('/newPassword', async (req, res) => {
         }
     } catch (error) {
         return res.status(500).json({ message: 'Error interno del servidor al procesar la solicitud. Por favor, intenta nuevamente más tarde.', error })
+    }
+})
+
+loginRouter.post('/oauth', async (req, res) => {
+    const connection = connect()
+
+    try {
+        const [row, fields] = await connection.query(`SELECT * FROM usuario WHERE correo = ?`, [req.body.email])
+
+        const user = row as mysql.RowDataPacket[]
+
+        if (Array.isArray(user) && user.length > 0) {            
+            const userToken = {
+                username: user[0].username,
+                identifier: user[0].id_usuario
+            }
+
+            if (SECRET) {
+                const token = jwt.sign(userToken, SECRET, {expiresIn: "6h"})
+                return res.status(200).json({ message: 'Usuario verificado con exito. Redirigiendo...', token, username: user[0].username, tipo_user: user[0].tipo_user, user_id: user[0].id_usuario, method: 'firebase' })
+            } else {
+                return res.status(500).json({ message: 'No se pudo generar el token de autenticación.' })
+            }
+        } else {
+            const newUser = {
+                id_usuario: randomUUID(),
+                username: req.body.username,
+                contrasenha: encrypt(),
+                correo: req.body.email,
+                telefono: null,
+                tipo_user: 'user',
+                direccion: null
+            }
+
+            await connection.query('INSERT INTO usuario (id_usuario, username, contrasenha, correo, telefono, tipo_user, direccion) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                [newUser.id_usuario, newUser.username, newUser.contrasenha, newUser.correo, newUser.telefono, newUser.tipo_user, newUser.direccion]
+            )
+
+            const userToken = {
+                username: newUser.username,
+                identifier: newUser.id_usuario
+            }
+
+            if (SECRET) {
+                const token = jwt.sign(userToken, SECRET, {expiresIn: "6h"})
+                return res.status(200).json({ message: 'Usuario verificado con exito. Redirigiendo...', token, username: newUser.username, tipo_user: newUser.tipo_user, user_id: newUser.id_usuario, method: 'firebase' })
+            } else {
+                return res.status(500).json({ message: 'No se pudo generar el token de autenticación.' })
+            }
+        }
+    } catch (error) {
+        return res.status(500).json({ message: 'Hubo un problema al intentar verificar el usuario. Inténtelo más tarde.', error })
+    } finally {
+        if (connection) {
+            connection.end()
+        }
     }
 })
 

@@ -256,7 +256,7 @@ loginRouter.post('/oauth', async (req, res) => {
 
             if (SECRET) {
                 const token = jwt.sign(userToken, SECRET, {expiresIn: "6h"})
-                return res.status(200).json({ message: 'Usuario verificado con exito. Redirigiendo...', token, username: newUser.username, tipo_user: newUser.tipo_user, user_id: newUser.id_usuario, method: 'firebase' })
+                return res.status(200).json({ message: 'Usuario creado y verificado con exito. Redirigiendo...', token, username: newUser.username, tipo_user: newUser.tipo_user, user_id: newUser.id_usuario, method: 'firebase' })
             } else {
                 return res.status(500).json({ message: 'No se pudo generar el token de autenticación.' })
             }

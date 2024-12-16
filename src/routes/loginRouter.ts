@@ -220,19 +220,19 @@ loginRouter.post('/oauth', async (req, res) => {
     try {
         const [row, fields] = await connection.query(`SELECT * FROM usuario WHERE correo = ?`, [req.body.email])
 
-        const user = row as mysql.RowDataPacket[]
+        const { username, id_usuario, tipo_user } = row as mysql.RowDataPacket[][0]
 
-        if (Array.isArray(user) && user.length > 0) {            
+        if (id_usuario) {            
             const userToken = {
-                username: user[0].username,
-                identifier: user[0].id_usuario
+                username: username,
+                identifier: id_usuario
             }
 
             if (SECRET) {
                 const token = jwt.sign(userToken, SECRET, {expiresIn: "6h"})
-                return res.status(200).json({ message: 'Usuario verificado con exito. Redirigiendo...', token, username: user[0].username, tipo_user: user[0].tipo_user, user_id: user[0].id_usuario, method: 'firebase' })
+                return res.status(200).json({ message: 'Usuario verificado con exito. Redirigiendo...', token, username: username, tipo_user: tipo_user, user_id: id_usuario, method: 'google' })
             } else {
-                return res.status(500).json({ message: 'No se pudo generar el token de autenticación.' })
+                return res.status(500).json({ message: 'No se pudo generar el token de autenticación, intente más tarde.' })
             }
         } else {
             const newUser = {
@@ -256,7 +256,7 @@ loginRouter.post('/oauth', async (req, res) => {
 
             if (SECRET) {
                 const token = jwt.sign(userToken, SECRET, {expiresIn: "6h"})
-                return res.status(200).json({ message: 'Usuario creado y verificado con exito. Redirigiendo...', token, username: newUser.username, tipo_user: newUser.tipo_user, user_id: newUser.id_usuario, method: 'firebase' })
+                return res.status(200).json({ message: 'Usuario creado y verificado con éxito. Redirigiendo...', token, username: newUser.username, tipo_user: newUser.tipo_user, user_id: newUser.id_usuario, method: 'google' })
             } else {
                 return res.status(500).json({ message: 'No se pudo generar el token de autenticación.' })
             }

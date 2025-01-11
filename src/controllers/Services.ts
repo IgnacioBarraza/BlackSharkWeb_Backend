@@ -32,7 +32,7 @@ export async function getServiceById(req: Request, res: Response, next: NextFunc
 export async function createService(req: Request, res: Response, next: NextFunction) {
   try {
     const parsedData = ServiceDto.parse(req.body)
-    const tools = parsedData.tools ? parsedData.tools.map(tool => ({ name: tool } as Tools)) : []
+    const tools = parsedData.tools ? await servicesService.getToolsByIds(parsedData.tools) : []
     const newService = await servicesService.createService({ ...parsedData, tools })
     sendResponse(req, res, newService, 201)
   } catch (error) {
@@ -50,6 +50,7 @@ export async function updateService(req: Request, res: Response, next: NextFunct
     if (!existingService) return next(new CustomError('Service not found', 404))
 
     const parsedData = ServiceDto.partial().parse(req.body);
+    const tools = parsedData.tools ? await servicesService.getToolsByIds(parsedData.tools) : existingService.tools
 
     const updatedData = {
       uid: uid,
@@ -58,7 +59,7 @@ export async function updateService(req: Request, res: Response, next: NextFunct
       price: parsedData.price ?? existingService.price,
       imageUrl: parsedData.imageUrl ?? existingService.imageUrl,
       recommended: parsedData.recommended ?? existingService.recommended,
-      tools: parsedData.tools ? parsedData.tools.map(tool => ({ name: tool } as Tools)) : existingService.tools
+      tools: tools
     }
 
     const updatedService = await servicesService.updateService(uid, updatedData)

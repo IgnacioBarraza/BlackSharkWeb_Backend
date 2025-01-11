@@ -1,6 +1,7 @@
 import { AppDataSource } from '../config/data-source'
 import { Services } from '../entities/Services'
 import { Tools } from '../entities/Tools'
+import { In } from 'typeorm'
 
 export class ServicesService {
   private serviceRepository = AppDataSource.getRepository(Services)
@@ -38,6 +39,6 @@ export class ServicesService {
   }
 
   async getToolsByIds(toolIds: string[]): Promise<Tools[]> {
-    return this.toolsRepository.findByIds(toolIds);
+    return this.toolsRepository.findBy({ uid: In(toolIds) });
   }
 }

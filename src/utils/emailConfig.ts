@@ -1,5 +1,8 @@
 import { createTransport } from 'nodemailer'
-import { EMAIL, CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN } from './config'
+import { config } from 'dotenv'
+
+config()
+const { EMAIL, CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN } = process.env
 
 const transporter = createTransport({
     service: 'gmail',
@@ -12,12 +15,12 @@ const transporter = createTransport({
     }
 })
 
-const sendMessage = async (to: string, text: string) => {
+const sendMessage = async (to: string, text: string, subject: string) => {
     try {
         await transporter.sendMail({
             from: 'bswebstudios@gmail.com',
             to: to,
-            subject: 'Restablecimiento de contraseña Black Shark Web',
+            subject: subject,
             text: text
         })
 

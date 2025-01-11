@@ -17,9 +17,9 @@ Follow the steps below to set up and run the backend locally.
 
 Make sure you have the following installed:
 
-- [Node.js](https://nodejs.org/) (v14 or higher)
+- [Node.js](https://nodejs.org/) (v18 or higher)
 - [MySQL](https://www.mysql.com/)
-- A package manager like `npm` or `yarn`
+- A package manager like `npm`, `yarn` or `pnpm`
 
 ### Installation
 
@@ -32,34 +32,34 @@ Make sure you have the following installed:
 
 2. Install dependencies:
 
-   ```bash
+   ```sh
+   # NPM
    npm install
+   # Yarn
+   yarn install
+   # PNPM
+   pnpm install
    ```
 
-3. Set up the `.env` file with the following keys:
+3. Create a `.env` file in the root directory with the following keys for the database configuration:
 
    ```plaintext
-   PORT=3001
+   PORT=3000
 
-   MYSQLDATABASE=
-   MYSQLHOST=
-   MYSQLPASSWORD=
-   MYSQLPORT=
-   MYSQLUSER=
-   MYSQL_DATABASE=
+   DB_NAME=<your_database_name>
+   DB_HOST=<db_host> // By default localhost
+   DB_PASSWORD=<your_db_password>
+   DB_PORT=<db_port> // By default 3306
+   DB_USER=<your_db_user>
+   NODE_ENV=dev // For logs purpose only
 
    SECRET=
+   REFRESH_TOKEN=
 
    EMAIL=
    CLIENT_ID=
    CLIENT_SECRET=
-   REFRESH_TOKEN=
    ```
-
-   - Replace the placeholders with your actual values:
-     - **MYSQL** variables for database connection.
-     - **SECRET** for authentication token signing.
-     - **EMAIL**, **CLIENT_ID**, **CLIENT_SECRET**, and **REFRESH_TOKEN** for email service configuration.
 
 4. Start the MySQL server and ensure your database is accessible.
 
@@ -67,86 +67,113 @@ Make sure you have the following installed:
 
 ### Running the Application
 
-1. Start the server:
+1. Run the application:
+    ```sh
+    # NPM
+    npm run dev
+    # Yarn
+    yarn dev
+    #PNPM
+    pnpm run dev
+    ```
 
-   ```bash
-   npm start
-   ```
-
-2. The server will run by default on `http://localhost:3001`. You can change the port in the `.env` file.
+2. The server will run by default on `http://localhost:3000`. You can change the port in the `.env` file.
 
 ### Scripts
 
 - **Start**: Starts the application in production mode.
-   ```bash
+   ```sh
    npm start
    ```
 - **Development**: Starts the application in development mode with live reloading.
-   ```bash
+   ```sh
    npm run dev
    ```
 
-## Project Structure
+## Directory Structure
+For this project is used the **Layered architecture**
 
 ```
 BlackSharkWeb_Backend/
-├── src/
-│   ├── controllers/    # Handles API request logic
-│   ├── models/         # Database models
-│   ├── routes/         # API route definitions
-│   ├── utils/          # Utility functions
-│   ├── middleware/     # Middleware logic
-│   └── app.js          # Main app entry point
-├── .env                # Environment variables
-├── package.json        # Project dependencies and scripts
-└── README.md           # Project documentation
+├── src
+│   ├── config
+│   │   └── data-source.ts
+│   ├── controllers
+│   │   └── **.ts
+│   ├── dtos
+│   │   └── **.ts
+│   ├── entities
+│   │   └── **.ts
+│   ├── middlewares
+│   │   ├── errorHandler.ts
+│   │   ├── validationMiddleware.ts
+│   │   └── validateUser.ts
+│   ├── routes
+│   │   └── **.ts
+│   ├── services
+│   │   └── **.ts
+│   ├── utils
+│   │   └── validation.ts
+│   ├── app.ts
+│   └── index.ts
+├── tests
+│   └── **.test.ts
+├── .env
+├── .gitignore
+├── package.json
+├── tsconfig.json
+└── README.md
 ```
 
-## Environment Variables
-
-The application requires the following environment variables in the `.env` file:
-
-| Variable         | Description                           |
-|-------------------|---------------------------------------|
-| `PORT`           | The port the server will run on       |
-| `MYSQLDATABASE`   | Name of the MySQL database           |
-| `MYSQLHOST`       | Host address of the MySQL database   |
-| `MYSQLPASSWORD`   | Password for the MySQL user          |
-| `MYSQLPORT`       | Port number for the MySQL database   |
-| `MYSQLUSER`       | Username for the MySQL database      |
-| `SECRET`          | Secret key for token authentication  |
-| `EMAIL`           | Sender email address                |
-| `CLIENT_ID`       | OAuth client ID for email service    |
-| `CLIENT_SECRET`   | OAuth client secret for email service|
-| `REFRESH_TOKEN`   | OAuth refresh token for email service|
+- **config**: Contains configuration files, such as the database configuration.
+- **controllers**: Handles HTTP requests and responses.
+- **dtos**: Data Transfer Objects for request validation and transformation.
+- **entities**: Contains the core business entities and domain models.
+- **middlewares**: Custom middleware functions for error handling and validation.
+- **routes**: Defines the API routes.
+- **services**: Contains the business logic of the application.
+- **utils**: Utility functions and helpers.
+- **tests**: Contains unit and integration tests.
 
 ---
 
-## API Endpoints
+## Example Endpoints
 
-### Authentication
-| Method | Endpoint       | Description              |
-|--------|----------------|--------------------------|
-| POST   | `/auth/login`  | Logs in a user.          |
-| POST   | `/auth/signup` | Registers a new user.    |
-<!-- | POST   | `/auth/refresh`| Refreshes the auth token.|
+### Update Service
 
-### User Management
-| Method | Endpoint       | Description              |
-|--------|----------------|--------------------------|
-| GET    | `/users`       | Retrieves all users.     |
-| GET    | `/users/:id`   | Retrieves a user by ID.  |
-| PUT    | `/users/:id`   | Updates user information.|
-| DELETE | `/users/:id`   | Deletes a user by ID.    |
+- **URL**: `api/service/:id/update`
+- **Method**: `PUT`
+- **Request Body**:
+    ```json
+    {
+        "name": "New Service Name",
+        "priceo": 100,
+        "description": "New Description",
+        "imageUrl": "https://example.com/new_image.jpg"
+    }
+    ```
+- **Response**:
+    ```json
+    {
+        "uid": "",
+        "name": "New Service Name",
+        "price": 100,
+        "description": "New Description",
+        "imageUrl": "https://example.com/new_image.jpg"
+    }
+    ```
 
-### Example Routes
-| Method | Endpoint          | Description                    |
-|--------|--------------------|--------------------------------|
-| GET    | `/example`         | Example route for testing.    |
-| POST   | `/example/create`  | Creates an example resource.  |
-| DELETE | `/example/:id`     | Deletes an example resource.  |
+### Running Tests
 
-*Note: Add any additional endpoints and their descriptions as needed.* -->
+To run the tests, use the following command:
+```sh
+# NPM
+npm test
+# Yarn
+yarn test
+# PNPM
+pnpm test
+```
 
 ## Debugging Tips
 
@@ -155,27 +182,25 @@ The application requires the following environment variables in the `.env` file:
    
 2. **Database Connection**:
    If the application can't connect to the database:
-   - Verify `MYSQLHOST`, `MYSQLPORT`, `MYSQLUSER`, `MYSQLPASSWORD`, and `MYSQLDATABASE` in `.env`.
+   - Verify `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, and `DB_NAME` in `.env`.
    - Test the connection manually using a database client like MySQL Workbench or CLI tools.
 
 3. **Port Conflicts**:
-   If port `3001` is already in use, change the `PORT` in `.env` or stop the other application using the port.
+   If port `3000` is already in use, change the `PORT` in `.env` or stop the other application using the port.
 
 4. **Logs**:
    Use the application logs for debugging. In development mode, detailed error logs are provided in the terminal.
 
-<!-- ## Future Improvements
+## Future Improvements
 
 - [ ] Implement robust unit and integration tests.
-- [ ] Add rate limiting for security.
 - [ ] Create detailed API documentation with Swagger.
-- [ ] Set up CI/CD pipelines for automated deployment. -->
+- [ ] Set up CI/CD pipelines for automated deployment.
 
 ## Support
 
 If you encounter any issues, feel free to create an issue on the [GitHub repository](https://github.com/IgnacioBarraza/BlackSharkWeb_Backend/issues).
 
-You can also contact me via email: **ignacio.barraza.rioja@gmail.com**
 
 ---
 

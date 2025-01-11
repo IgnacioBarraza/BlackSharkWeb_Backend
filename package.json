@@ -1,12 +1,12 @@
 {
-  "name": "backend",
-  "version": "2.3.0",
+  "name": "blacksharkweb_backend",
+  "version": "1.0.0",
   "description": "",
-  "main": "index.ts",
+  "main": "app.ts",
   "scripts": {
     "build": "npx tsc",
-    "start": "node dist/index.js",
-    "dev": "nodemon index.ts"
+    "start": "node dist/app.js",
+    "dev": "nodemon src/app.ts"
   },
   "author": "Equipo de trabajo",
   "license": "ISC",
@@ -15,9 +15,11 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.6",
+    "@types/morgan": "^1.9.9",
     "@types/mysql": "^2.15.26",
     "@types/node": "^20.12.5",
     "@types/nodemailer": "^6.4.15",
+    "morgan": "^1.10.0",
     "nodemon": "^3.1.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.4"
@@ -33,6 +35,8 @@
     "moment": "^2.30.1",
     "mysql2": "^3.10.0",
     "nodemailer": "^6.9.13",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.20",
     "zod": "^3.23.4"
   }
 }

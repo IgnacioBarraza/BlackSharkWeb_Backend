@@ -18,7 +18,7 @@ export class UserService {
     return this.userRepository.findOne({ where: { email }, relations: ['userPreferences'] });
   }
 
-  async createUser(user: User): Promise<User> {
+  async createUser(user:Partial<User>): Promise<User> {
     return this.userRepository.save(user)
   }
 

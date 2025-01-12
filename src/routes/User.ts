@@ -1,8 +1,10 @@
 import { Router } from 'express'
-import { getUsers, getUserById, login, register, updateUser, deleteUser, recoverPassword, resetPassword, verifyEmail } from '../controllers/User'
+import { UserController } from '../controllers/User'
 import { authenticateToken, authorizeRole } from '../middleware/validateUser'
 
 const userRouter = Router()
+
+const { getUsers, getUserById, login, register, updateUser, deleteUser, recoverPassword, resetPassword, verifyEmail } = new UserController()
 
 // Public routes
 userRouter.post('/login', login)

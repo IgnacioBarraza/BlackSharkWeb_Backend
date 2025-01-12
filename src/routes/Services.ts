@@ -1,10 +1,12 @@
 import { Router } from 'express'
-import { getServices, getServiceById, createService, updateService, deleteService } from '../controllers/Services'
+import { ServiceController } from '../controllers/Services'
 import { validationMiddleware } from '../middleware/validationMiddleware'
 import { ServiceDto } from '../dtos/Services'
 import { authenticateToken, authorizeRole } from '../middleware/validateUser'
 
 const servicesRouter = Router()
+
+const { getServices, getServiceById, createService, updateService, deleteService } = new ServiceController()
 
 // Public routes
 servicesRouter.get('/', getServices)

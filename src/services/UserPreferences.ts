@@ -8,11 +8,7 @@ export class UserPreferencesService {
     return this.userPreferencesRepository.findOne({ where: { uid: id } })
   }
 
-  async createUserPreferences(userPreferences: UserPreferences): Promise<UserPreferences> {
-    return this.userPreferencesRepository.save(userPreferences)
-  }
-
-  async createDefaultUserPreferences(id: string): Promise<UserPreferences> {
+  async createDefaultUserPreferences(): Promise<UserPreferences> {
     const defaultPreferences = this.userPreferencesRepository.create({ 
       theme: 'light',
       lang: 'es',

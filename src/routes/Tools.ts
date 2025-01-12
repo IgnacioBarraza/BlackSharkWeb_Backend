@@ -1,8 +1,10 @@
 import { Router } from 'express'
-import { getTools, getToolById, createTool, updateTool, deleteTool } from '../controllers/Tools'
+import { ToolsController } from '../controllers/Tools'
 import { authenticateToken, authorizeRole } from '../middleware/validateUser'
 
 const toolsRouter = Router()
+
+const { getTools, getToolById, createTool, updateTool, deleteTool } = new ToolsController()
 
 // Public routes
 toolsRouter.get('/', getTools)

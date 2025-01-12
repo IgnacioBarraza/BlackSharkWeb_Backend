@@ -18,7 +18,7 @@ const transporter = createTransport({
 const sendMessage = async (to: string, text: string, subject: string) => {
     try {
         await transporter.sendMail({
-            from: 'bswebstudios@gmail.com',
+            from: EMAIL,
             to: to,
             subject: subject,
             text: text

@@ -51,12 +51,23 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     
 
     const token = jwt.sign(
-      { uid: user.uid, role: user.userRole },
+      { uid: user.uid },
       JWT_SECRET as string,
       { expiresIn: '3h' }
     )
 
-    sendResponse(req, res, { token }, 200)
+    const userData = {
+      uid: user.uid,
+      userName: user.userName,
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      userRole: user.userRole,
+      emailVerified: user.emailVerified,
+      userPreferences: user.userPreferences
+    }
+
+    sendResponse(req, res, { token, user: userData }, 200)
   } catch (error) {
     next(new CustomError('Error logging in', 500, [error]))
   }
@@ -67,13 +78,11 @@ export async function register(req: Request, res: Response, next: NextFunction) 
     const parsedData = UserDto.parse(req.body)
     const { userName, name, email, password, phone } = parsedData
 
-    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10)
 
     const uid = randomUUID()
     const userPreferences = await userPreferencesService.createDefaultUserPreferences(uid)
 
-    // Create the new user
     const newUser = await userService.createUser({
       uid: uid,
       userName: userName,
@@ -111,7 +120,7 @@ export async function sendVerificationEmail(user: User) {
   const emailToken = jwt.sign(
     { uid: user.uid },
     JWT_SECRET as string,
-    { expiresIn: '1h' }
+    { expiresIn: '30m' }
   )
 
   const token = `${emailToken}`
@@ -120,9 +129,9 @@ export async function sendVerificationEmail(user: User) {
 
 export async function updateUser(req: Request, res: Response, next: NextFunction) {
   try {
-    const id = req.params.id
+    const uid = req.params.id
     const user = UserDto.partial().parse(req.body)
-    const updatedUser = await userService.updateUser(id, user)
+    const updatedUser = await userService.updateUser(uid, user)
     if (!updatedUser) {
       return next(new CustomError('User not found', 404));
     }
@@ -135,8 +144,8 @@ export async function updateUser(req: Request, res: Response, next: NextFunction
 
 export async function deleteUser(req: Request, res: Response, next: NextFunction) {
   try {
-    const id = req.params.id
-    const result = await userService.deleteUser(id)
+    const uid = req.params.id
+    const result = await userService.deleteUser(uid)
     if (!result) {
       return next(new CustomError('User not found', 404))
     }
@@ -163,7 +172,7 @@ export async function recoverPassword(req: Request, res: Response, next: NextFun
     const sendEmail = await sendMessage(email, emailContent, 'Restablecer contraseña Black Shark Web Studios')
 
     const { status, message } = sendEmail
-    // Send email with password recovery instructions
+    
     sendResponse(req, res, message, status)
   } catch (error) {
     next(new CustomError('Error recovering password', 500, [error]))

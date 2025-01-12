@@ -8,7 +8,7 @@ import { config } from 'dotenv'
 import { sendResponse } from '../utils/utils'
 import { UserDto } from '../dtos/User'
 import { ZodError } from 'zod'
-import sendMessage from '../utils/emailConfig'
+import sendMessage from '../config/emailConfig'
 import { User } from '../entities/User'
 
 config()

@@ -18,6 +18,6 @@ export class Tools {
   @Column()
   imageUrl!: string;
 
-  @ManyToMany(() => Services, (service) => service.uid)
+  @ManyToMany(() => Services, (service) => service.tools)
   services!: Services[]
 }

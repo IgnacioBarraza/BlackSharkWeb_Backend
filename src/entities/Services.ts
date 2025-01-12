@@ -21,7 +21,7 @@ export class Services {
   @Column()
   recommended!: boolean;
 
-  @ManyToMany(() => Tools, (tools) =>tools.uid)
+  @ManyToMany(() => Tools, (tools) =>tools.services)
   @JoinTable()
   tools!: Tools[]
 }

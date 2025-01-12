@@ -16,7 +16,9 @@ export class ServicesService {
   }
 
   async getServiceById(id: string): Promise<Services | null> {
-    return this.serviceRepository.findOne({where: { uid: id }, relations: ['tools']})
+    return this.serviceRepository.findOne({where: { uid: id }, relations: {
+      tools: true
+    }})
   }
 
   async createService(service: Partial<Services>): Promise<Services> {

@@ -18,7 +18,7 @@ export async function getTools(
     const tools = await toolsService.getTools()
     sendResponse(req, res, tools, 200)
   } catch (error) {
-    next(new CustomError('Error getting tools', 500, [error]))
+    next(new CustomError('Error getting tools', 500, error))
   }
 }
 
@@ -33,7 +33,7 @@ export async function getToolById(
     if (!tool) return next(new CustomError('Tool not found', 404))
     sendResponse(req, res, tool, 200)
   } catch (error) {
-    next(new CustomError('Error getting tool', 500, [error]))
+    next(new CustomError('Error getting tool', 500, error))
   }
 }
 
@@ -57,10 +57,15 @@ export async function createTool(
 
     if (services.some((service) => !service)) return next(new CustomError('One or more services not found', 404))
 
-    const newTool = await toolsService.createTool({
-      ...parsedData,
+    const newToolData = {
+      name: parsedData.name,
+      description: parsedData.description,
+      type: parsedData.type,
+      imageUrl: parsedData.imageUrl,
       services: services.filter((service) => service)
-    })
+    }
+
+    const newTool = await toolsService.createTool({ ...newToolData })
     sendResponse(req, res, newTool, 201)
   } catch (error) {
     if (error instanceof ZodError) {

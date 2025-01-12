@@ -8,7 +8,18 @@ export function sendResponse(
   message: any,
   status = 200
 ) {
-  return response.status(status).send(message)
+  const cache = new Set()
+  const jsonString = JSON.stringify(message, (key, value) => {
+    if (typeof value === 'object' && value !== null) {
+      if (cache.has(value)) {
+        return
+      }
+      cache.add(value)
+    }
+    return value
+  })
+  cache.clear()
+  response.status(status).send(JSON.parse(jsonString))
 }
 
 export const encrypt = () => {

@@ -5,16 +5,16 @@ import { ServiceDto } from '../dtos/Services'
 import { authenticateToken, authorizeRole } from '../middleware/validateUser'
 
 const servicesRouter = Router()
-
-const { getServices, getServiceById, createService, updateService, deleteService } = new ServiceController()
+const serviceController = new ServiceController()
 
 // Public routes
-servicesRouter.get('/', getServices)
-servicesRouter.get('/:id',getServiceById)
+servicesRouter.get('/', (req, res, next) => serviceController.getServices(req, res, next))
+servicesRouter.get('/:id', (req, res, next) => serviceController.getServiceById(req, res, next))
 
 // Protected routes
-servicesRouter.post('/', authenticateToken, authorizeRole('admin'), validationMiddleware(ServiceDto), createService)
-servicesRouter.put('/:id/update', authenticateToken, authorizeRole('admin'), updateService)
-servicesRouter.delete('/:id/delete', authenticateToken, authorizeRole('admin'),deleteService)
+servicesRouter.use(authenticateToken)
+servicesRouter.post('/', authorizeRole('admin'), validationMiddleware(ServiceDto), (req, res, next) => serviceController.createService(req, res, next))
+servicesRouter.put('/:id/update', authorizeRole('admin'), (req, res, next) => serviceController.updateService(req, res, next))
+servicesRouter.delete('/:id/delete', authorizeRole('admin'), (req, res, next) => serviceController.deleteService(req, res, next))
 
 export default servicesRouter

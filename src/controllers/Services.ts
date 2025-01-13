@@ -6,9 +6,6 @@ import { ServiceDto } from '../dtos/Services'
 import { ZodError } from 'zod'
 import { ToolsService } from '../services/Tools'
 
-const servicesService = new ServicesService()
-const toolsService = new ToolsService()
-
 export class ServiceController {
   private servicesService: ServicesService
   private toolsService: ToolsService
@@ -60,11 +57,11 @@ export class ServiceController {
   async updateService(req: Request, res: Response, next: NextFunction) {
     try {
       const uid = req.params.id
-      const existingService = await servicesService.getServiceById(uid)
+      const existingService = await this.servicesService.getServiceById(uid)
       if (!existingService) return next(new CustomError('Service not found', 404))
   
       const parsedData = ServiceDto.partial().parse(req.body);
-      const newTools = parsedData.tools ? await servicesService.getToolsByIds(parsedData.tools) : existingService.tools
+      const newTools = parsedData.tools ? await this.servicesService.getToolsByIds(parsedData.tools) : existingService.tools
       const existingTools = existingService.tools || []
   
       const toolsMap = new Map()
@@ -81,11 +78,11 @@ export class ServiceController {
         tools: mergedTools
       }
   
-      const updatedService = await servicesService.updateService(uid, updatedData)
+      const updatedService = await this.servicesService.updateService(uid, updatedData)
   
       for (const tool of mergedTools) {
         tool.services = tool.services ? [...tool.services.filter((s: { uid: string; }) => s.uid !== uid), updatedService] : [updatedService]
-        await toolsService.updateTool(tool.uid, tool)
+        await this.toolsService.updateTool(tool.uid, tool)
       }
   
       if (!updatedService) return next(new CustomError('Service not found', 404))
@@ -108,10 +105,10 @@ export class ServiceController {
   async deleteService(req: Request, res: Response, next: NextFunction) {
     try {
       const uid = req.params.id
-      const service = await servicesService.getServiceById(uid)
+      const service = await this.servicesService.getServiceById(uid)
       if (!service) return next(new CustomError('Service not found', 404))
   
-      const deleted = await servicesService.deleteService(uid)
+      const deleted = await this.servicesService.deleteService(uid)
       if (!deleted) return next(new CustomError('Service not found', 404))
       
       sendResponse(req, res, 'Service deleted', 200)

@@ -14,7 +14,7 @@ servicesRouter.get('/:id', (req, res, next) => serviceController.getServiceById(
 // Protected routes
 servicesRouter.use(authenticateToken)
 servicesRouter.post('/', authorizeRole('admin'), validationMiddleware(ServiceDto), (req, res, next) => serviceController.createService(req, res, next))
-servicesRouter.put('/:id/update', authorizeRole('admin'), (req, res, next) => serviceController.updateService(req, res, next))
-servicesRouter.delete('/:id/delete', authorizeRole('admin'), (req, res, next) => serviceController.deleteService(req, res, next))
+servicesRouter.put('/:id', authorizeRole('admin'), (req, res, next) => serviceController.updateService(req, res, next))
+servicesRouter.delete('/:id', authorizeRole('admin'), (req, res, next) => serviceController.deleteService(req, res, next))
 
 export default servicesRouter

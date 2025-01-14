@@ -39,7 +39,19 @@ export class ServiceController {
     try {
       const parsedData = ServiceDto.parse(req.body)
       const tools = parsedData.tools ? await this.servicesService.getToolsByIds(parsedData.tools) : []
-      const newService = await this.servicesService.createService({ ...parsedData, tools })
+      const toolsMap = new Map()
+      tools.forEach(tool => toolsMap.set(tool.uid, tool))
+      const parsedTools = Array.from(toolsMap.values())
+
+      const newServiceData = {
+        name: parsedData.name,
+        description: parsedData.description,
+        price: parsedData.price,
+        imageUrl: parsedData.imageUrl,
+        recommended: false,
+        tools: parsedTools
+      }
+      const newService = await this.servicesService.createService(newServiceData)
 
       for (const tool of tools) {
         if (newService) tool.services = [...(tool.services || []), newService]
@@ -107,6 +119,14 @@ export class ServiceController {
       const uid = req.params.id
       const service = await this.servicesService.getServiceById(uid)
       if (!service) return next(new CustomError('Service not found', 404))
+
+      const tools = await this.toolsService.getTools()
+      if (!tools) return next(new CustomError('Tools not found', 500, ['Tools not found']))
+
+      for (const tool of tools) {
+        tool.services = tool.services.filter(s => s.uid !== uid)
+        await this.toolsService.updateTool(tool.uid, tool)
+      }
   
       const deleted = await this.servicesService.deleteService(uid)
       if (!deleted) return next(new CustomError('Service not found', 404))

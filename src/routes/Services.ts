@@ -9,12 +9,14 @@ const serviceController = new ServiceController()
 
 // Public routes
 servicesRouter.get('/', (req, res, next) => serviceController.getServices(req, res, next))
-servicesRouter.get('/:id', (req, res, next) => serviceController.getServiceById(req, res, next))
+servicesRouter.get('/:uid', (req, res, next) => serviceController.getServiceById(req, res, next))
 
 // Protected routes
 servicesRouter.use(authenticateToken)
-servicesRouter.post('/', authorizeRole('admin'), validationMiddleware(ServiceDto), (req, res, next) => serviceController.createService(req, res, next))
-servicesRouter.put('/:id', authorizeRole('admin'), (req, res, next) => serviceController.updateService(req, res, next))
-servicesRouter.delete('/:id', authorizeRole('admin'), (req, res, next) => serviceController.deleteService(req, res, next))
+servicesRouter.use(authorizeRole('admin'))
+servicesRouter.post('/', validationMiddleware(ServiceDto), (req, res, next) => serviceController.createService(req, res, next))
+servicesRouter.put('/:uid', (req, res, next) => serviceController.updateService(req, res, next))
+servicesRouter.put('/:uid/add-tools', (req, res, next) => serviceController.addToolsToService(req, res, next))
+servicesRouter.delete('/:uid', (req, res, next) => serviceController.deleteService(req, res, next))
 
 export default servicesRouter

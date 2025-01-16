@@ -53,6 +53,10 @@ export class ToolsService {
     return true
   }
 
+  async getToolsByIds(toolsIds: string[]): Promise<Tools[]> {
+    return this.toolsRepository.findBy({ uid: In(toolsIds)})
+  }
+
   async getServicesByIds(serviceIds: string[]): Promise<Services[]> {
     return this.servicesRepository.findBy({ uid: In(serviceIds) })
   }

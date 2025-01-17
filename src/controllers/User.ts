@@ -27,7 +27,7 @@ export class UserController {
   async getUsers(req: Request, res: Response, next: NextFunction) {
     try {
       const users = await this.userService.getUsers()
-      sendResponse(req, res, { users }, 200)
+      sendResponse(req, res, users, 200)
     } catch (error) {
       next(new CustomError('Error fetching users', 500, [error]))
     }
@@ -39,8 +39,18 @@ export class UserController {
       const user = await this.userService.getUserById(uid)
       if (!user) return next(new CustomError('User not found', 404))
       
+      const userData = {
+        uid: user.uid,
+        userName: user.userName,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        userRole: user.userRole,
+        emailVerified: user.emailVerified,
+        userPreferences: user.userPreferences
+      }
   
-      sendResponse(req, res, { user }, 200)
+      sendResponse(req, res, userData, 200)
     } catch (error) {
       next(new CustomError('Error fetching user', 500, [error]))
     }

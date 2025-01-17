@@ -38,12 +38,20 @@ export class UserPreferencesController {
   }
 
   async deleteUserPreferences(req: Request, res: Response, next: NextFunction) {
+    const { uid } = req.params
     try {
-      const { uid } = req.params
-      const deleted = await this.userPreferencesService.deleteUserPreferences(uid)
-      if (!deleted) return next(new CustomError('User preferences not found', 404))
+      const existingPreferences = await this.userPreferencesService.getUserPreferencesById(uid)
+      if (!existingPreferences) return next(new CustomError('User preferences not found', 404, ['User preferences not found']))
 
-      sendResponse(req, res, { deleted }, 200)
+      const defaultPreferences = {
+        theme: 'light',
+        notificationsEnabled: false,
+        lang: 'en',
+        notificationsType: ''
+      }
+
+      const updatedPreferences = await this.userPreferencesService.updateUserPreferences(uid, defaultPreferences)
+      sendResponse(req, res, updatedPreferences, 200)
     } catch (error) {
       next(new CustomError('Error deleting user preferences', 500, error))
     }

@@ -5,7 +5,11 @@ export class UserPreferencesService {
   private userPreferencesRepository = AppDataSource.getRepository(UserPreferences)
 
   async getUserPreferencesById(id: string): Promise<UserPreferences | null> {
-    return this.userPreferencesRepository.findOne({ where: { uid: id } })
+    return this.userPreferencesRepository.findOne({ where: { uid: id },
+      relations: {
+        user: true
+      } 
+    })
   }
 
   async createDefaultUserPreferences(): Promise<UserPreferences> {

@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { UserPreferencesController } from '../controllers/UserPreferences'
+import { UserPreferencesController } from '../controllers/UserPreferencesController'
 import { authenticateToken, authorizeRole } from '../middleware/validateUser'
 
 const userPreferenceRouter = Router()

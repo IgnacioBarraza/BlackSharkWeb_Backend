@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { UserPreferencesService } from '../services/UserPreferences'
+import { UserPreferencesService } from '../services/UserPreferencesService'
 import { sendResponse } from '../utils/utils'
 import { CustomError } from '../middleware/errorHandler'
 import { ZodError } from 'zod'

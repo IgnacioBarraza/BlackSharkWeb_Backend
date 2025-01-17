@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from 'express'
 import { sendResponse } from '../utils/utils'
-import { ToolsService } from '../services/Tools'
+import { ToolsService } from '../services/ToolsService'
 import { CustomError } from '../middleware/errorHandler'
 import { ZodError } from 'zod'
 import { ToolsDto } from '../dtos/Tools'
-import { ServicesService } from '../services/Services'
+import { ServicesService } from '../services/ServicesService'
 
 export class ToolsController {
   private toolsService: ToolsService

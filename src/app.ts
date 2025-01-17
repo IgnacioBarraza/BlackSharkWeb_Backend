@@ -8,16 +8,16 @@ import morgan from 'morgan'
 /** IMPORTS **/
 
 // Routes:
-import servicesRouter from './routes/Services'
-import userRouter from './routes/User'
+import servicesRouter from './routes/ServicesRoutes'
+import userRouter from './routes/UserRouter'
 
 // Middleware:
 import { errorHandler } from './middleware/errorHandler'
 
 // Utils:
 import { sendResponse } from './utils/utils'
-import toolsRouter from './routes/Tools'
-import userPreferenceRouter from './routes/userPreferences'
+import toolsRouter from './routes/ToolsRouter'
+import userPreferenceRouter from './routes/userPreferencesRouter'
 
 
 /** APP **/

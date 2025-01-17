@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { ToolsController } from '../controllers/Tools'
+import { ToolsController } from '../controllers/ToolsController'
 import { authenticateToken, authorizeRole } from '../middleware/validateUser'
 
 const toolsRouter = Router()

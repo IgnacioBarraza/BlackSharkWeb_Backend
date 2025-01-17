@@ -13,7 +13,7 @@ servicesRouter.get('/:uid', (req, res, next) => serviceController.getServiceById
 
 // Protected routes
 servicesRouter.use(authenticateToken)
-servicesRouter.use(authorizeRole('admin'))
+servicesRouter.use(authorizeRole(['admin']))
 servicesRouter.post('/', validationMiddleware(ServiceDto), (req, res, next) => serviceController.createService(req, res, next))
 servicesRouter.put('/:uid', (req, res, next) => serviceController.updateService(req, res, next))
 servicesRouter.put('/:uid/add-tools', (req, res, next) => serviceController.addToolsToService(req, res, next))

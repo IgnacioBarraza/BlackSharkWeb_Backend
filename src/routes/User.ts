@@ -11,12 +11,13 @@ userRouter.post('/register', (req, res, next) => userController.register(req, re
 userRouter.post('/recover-password', (req, res, next) => userController.recoverPassword(req, res, next))
 userRouter.post('/reset-password', (req, res, next) => userController.resetPassword(req, res, next))
 userRouter.get('/verify-email', (req, res, next) => userController.verifyEmail(req, res, next))
+userRouter.put('/:uid', (req, res, next) => userController.updateUser(req, res, next))
 
 // Protected routes
 userRouter.use(authenticateToken)
-userRouter.get('/', authorizeRole('admin'), (req, res, next) => userController.getUsers(req, res, next))
-userRouter.get('/:id', authorizeRole('admin'), (req, res, next) => userController.getUserById(req, res, next))
-userRouter.put('/:id/update', (req, res, next) => userController.updateUser(req, res, next))
-userRouter.delete('/:id/delete', authorizeRole('admin'), (req, res, next) => userController.deleteUser(req, res, next))
+userRouter.use(authorizeRole(['admin']))
+userRouter.get('/', (req, res, next) => userController.getUsers(req, res, next))
+userRouter.get('/:uid', (req, res, next) => userController.getUserById(req, res, next))
+userRouter.delete('/:uid', (req, res, next) => userController.deleteUser(req, res, next))
 
 export default userRouter

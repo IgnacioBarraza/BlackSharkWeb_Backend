@@ -35,7 +35,7 @@ export class UserController {
 
   async getUserById(req: Request, res: Response, next: NextFunction) {
     try {
-      const uid = req.params.id
+      const { uid } = req.params
       const user = await this.userService.getUserById(uid)
       if (!user) return next(new CustomError('User not found', 404))
       
@@ -149,7 +149,7 @@ export class UserController {
 
   async deleteUser(req: Request, res: Response, next: NextFunction) {
     try {
-      const uid = req.params.id
+      const { uid } = req.params
       const result = await this.userService.deleteUser(uid)
       if (!result) {
         return next(new CustomError('User not found', 404))

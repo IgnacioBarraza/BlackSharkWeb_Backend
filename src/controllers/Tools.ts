@@ -26,7 +26,7 @@ export class ToolsController {
 
   async getToolById(req: Request, res: Response, next: NextFunction) {
     try {
-      const uid = req.params.id
+      const { uid } = req.params
       const tool = await this.toolsService.getToolById(uid)
       if (!tool) return next(new CustomError('Tool not found', 404))
       sendResponse(req, res, tool, 200)
@@ -72,7 +72,7 @@ export class ToolsController {
 
   async updateTool(req: Request, res: Response, next: NextFunction) {
     try {
-      const uid = req.params.id
+      const { uid } = req.params
       const existingTool = await this.toolsService.getToolById(uid)
       if (!existingTool) return next(new CustomError('Tool not found', 404))
 
@@ -121,7 +121,7 @@ export class ToolsController {
 
   async deleteTool(req: Request, res: Response, next: NextFunction) {
     try {
-      const uid = req.params.id
+      const { uid } = req.params
       const deleted = await this.toolsService.deleteTool(uid)
       if (!deleted) return next(new CustomError('Tool not found', 404))
       sendResponse(req, res, 'Tool deleted', 204)

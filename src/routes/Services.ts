@@ -18,5 +18,6 @@ servicesRouter.post('/', validationMiddleware(ServiceDto), (req, res, next) => s
 servicesRouter.put('/:uid', (req, res, next) => serviceController.updateService(req, res, next))
 servicesRouter.put('/:uid/add-tools', (req, res, next) => serviceController.addToolsToService(req, res, next))
 servicesRouter.delete('/:uid', (req, res, next) => serviceController.deleteService(req, res, next))
+servicesRouter.delete('/:uid/remove-tool/:toolId', (req, res, next) => serviceController.removeToolFromService(req, res, next));
 
 export default servicesRouter

@@ -118,44 +118,80 @@ export class ServiceController {
 
   async addToolsToService(req: Request, res: Response, next: NextFunction) {
     try {
-      const { uid } = req.params
-      const existingService = await this.servicesService.getServiceById(uid)
-      if (!existingService) return next(new CustomError('Service not found', 404))
+      const { uid } = req.params;
+      const existingService = await this.servicesService.getServiceById(uid);
+      if (!existingService) return next(new CustomError('Service not found', 404));
 
-        const parsedData = ServiceDto.partial().parse(req.body);
-        const newTools = parsedData.tools ? await this.toolsService.getToolsByIds(parsedData.tools) : [];
-        const existingTools = existingService.tools || [];
-  
-        // Merge existing tools with new tools, avoiding duplicates
-        const toolsMap = new Map();
-        existingTools.forEach(tool => toolsMap.set(tool.uid, tool));
-        newTools.forEach(tool => toolsMap.set(tool.uid, tool));
-        const mergedTools = Array.from(toolsMap.values());
-  
-        existingService.tools = mergedTools;
-        const updatedService = await this.servicesService.updateService(uid, existingService);
-  
-        // Update tools to include the updated service
-        for (const tool of mergedTools) {
-          tool.services = tool.services ? [...tool.services.filter((s: { uid: string }) => s.uid !== uid), updatedService] : [updatedService];
-          await this.toolsService.updateTool(tool.uid, tool);
-        }
-  
-        if (!updatedService) return next(new CustomError('Service not found', 404));
-  
-        // Remove circular references before sending the response
-        const responseService = {
-          ...updatedService,
-          tools: updatedService.tools.map(tool => ({
-            ...tool,
-            services: tool.services.map(service => service.uid) // Only include service UIDs
-          }))
-        };
-  
-        sendResponse(req, res, responseService, 200);
+      const parsedData = ServiceDto.partial().parse(req.body);
+      const newTools = parsedData.tools ? await this.toolsService.getToolsByIds(parsedData.tools) : [];
+      const existingTools = existingService.tools || [];
+
+      // Merge existing tools with new tools, avoiding duplicates
+      const toolsMap = new Map();
+      existingTools.forEach(tool => toolsMap.set(tool.uid, tool));
+      newTools.forEach(tool => toolsMap.set(tool.uid, tool));
+      const mergedTools = Array.from(toolsMap.values());
+
+      existingService.tools = mergedTools;
+      const updatedService = await this.servicesService.updateService(uid, existingService);
+
+      // Update tools to include the updated service
+      for (const tool of mergedTools) {
+        tool.services = tool.services ? [...tool.services.filter((s: { uid: string }) => s.uid !== uid), updatedService] : [updatedService];
+        await this.toolsService.updateTool(tool.uid, tool);
+      }
+
+      if (!updatedService) return next(new CustomError('Service not found', 404));
+
+      // Remove circular references before sending the response
+      const responseService = {
+        ...updatedService,
+        tools: updatedService.tools.map(tool => ({
+          ...tool,
+          services: tool.services ? tool.services.map(service => service.uid) : [] // Only include service UIDs
+        }))
+      };
+
+      sendResponse(req, res, responseService, 200);
     } catch (error) {
       if (error instanceof ZodError) return next(new CustomError('Validation error', 400, [error]));
       next(new CustomError('Error adding tools to service', 500, error));
+    }
+  }
+
+  async removeToolFromService(req: Request, res: Response, next: NextFunction) {
+    const { uid, toolId } = req.params;
+    try {
+      const existingService = await this.servicesService.getServiceById(uid);
+      if (!existingService) return next(new CustomError('Service not found', 404));
+
+      const tool = await this.toolsService.getToolById(toolId);
+      if (!tool) return next(new CustomError('Tool not found', 404));
+
+      // Remove the tool from the service
+      existingService.tools = existingService.tools.filter(t => t.uid !== toolId);
+      const updatedService = await this.servicesService.updateService(uid, existingService);
+
+      // Remove the service from the tool
+      tool.services = tool.services ? tool.services.filter(s => s.uid !== uid) : [];
+      await this.toolsService.updateTool(tool.uid, tool);
+
+      if (!updatedService) return next(new CustomError('Service not found', 404));
+
+      // Remove circular references before sending the response
+      const responseService = {
+        ...updatedService,
+        tools: updatedService.tools.map(tool => ({
+          ...tool,
+          services: tool.services ? tool.services.map(service => service.uid) : [] // Only include service UIDs
+        }))
+      };
+
+      sendResponse(req, res, responseService, 200);
+    } catch (error) {
+      console.error(error);
+      if (error instanceof ZodError) return next(new CustomError('Validation error', 400, [error]));
+      next(new CustomError('Error removing tool from service', 500, error));
     }
   }
 }

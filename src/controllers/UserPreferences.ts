@@ -14,8 +14,8 @@ export class UserPreferencesController {
 
   async getUserPreferences(req: Request, res: Response, next: NextFunction) {
     try {
-      const userId = req.params.id
-      const preferences = await this.userPreferencesService.getUserPreferencesById(userId)
+      const { uid } = req.params
+      const preferences = await this.userPreferencesService.getUserPreferencesById(uid)
       sendResponse(req, res, { preferences }, 200)
     } catch (error) {
       next(new CustomError('Error fetching user preferences', 500, [error]))
@@ -24,12 +24,12 @@ export class UserPreferencesController {
 
   async updateUserPreferences(req: Request, res: Response, next: NextFunction) {
     try {
-      const userId = req.params.id
-      const existingPreferences = await this.userPreferencesService.getUserPreferencesById(userId)
+      const { uid } = req.params
+      const existingPreferences = await this.userPreferencesService.getUserPreferencesById(uid)
       if (!existingPreferences) return next(new CustomError('User preferences not found', 404))
 
       const preferencesData = UserPreferencesDto.partial().parse(req.body)
-      const updatedPreferences = await this.userPreferencesService.updateUserPreferences(userId, preferencesData)
+      const updatedPreferences = await this.userPreferencesService.updateUserPreferences(uid, preferencesData)
       sendResponse(req, res, { updatedPreferences }, 200)
     } catch (error) {
       if (error instanceof ZodError) return next(new CustomError('Validation error', 400, [error]))
@@ -39,8 +39,8 @@ export class UserPreferencesController {
 
   async deleteUserPreferences(req: Request, res: Response, next: NextFunction) {
     try {
-      const userId = req.params.id
-      const deleted = await this.userPreferencesService.deleteUserPreferences(userId)
+      const { uid } = req.params
+      const deleted = await this.userPreferencesService.deleteUserPreferences(uid)
       if (!deleted) return next(new CustomError('User preferences not found', 404))
 
       sendResponse(req, res, { deleted }, 200)

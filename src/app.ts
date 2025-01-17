@@ -17,6 +17,7 @@ import { errorHandler } from './middleware/errorHandler'
 // Utils:
 import { sendResponse } from './utils/utils'
 import toolsRouter from './routes/Tools'
+import userPreferenceRouter from './routes/userPreferences'
 
 
 /** APP **/
@@ -33,6 +34,7 @@ app.use(morgan('dev'))
 app.use('/api/users', userRouter)
 app.use('/api/services', servicesRouter)
 app.use('/api/tools', toolsRouter)
+app.use('/api/userPreferences', userPreferenceRouter)
 
 app.use('/healthy', (req: Request, res: Response) => {
   return sendResponse(req, res, 'OK', 200)

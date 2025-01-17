@@ -30,9 +30,9 @@ export function authenticateToken(req: Request, res: Response, next: NextFunctio
   })
 }
 
-export function authorizeRole(role: string) {
+export function authorizeRole(roles: string[]) {
   return (req: Request, res: Response, next: NextFunction) => {
-    if (req.user?.role !== role) {
+    if (req.user && !roles.includes(req.user?.role)) {
       return next(new CustomError('Forbidden', 403))
     }
     next()

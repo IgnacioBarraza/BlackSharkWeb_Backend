@@ -1,23 +1,24 @@
 import express, { Request, Response } from 'express'
-import cors from 'cors'
 import { json, urlencoded } from 'body-parser'
 import { AppDataSource } from './config/data-source'
 import { config } from "dotenv"
+import cors from 'cors'
 import morgan from 'morgan'
 
 /** IMPORTS **/
 
 // Routes:
-import servicesRouter from './routes/ServicesRoutes'
+import servicesRouter from './routes/ServicesRouter'
 import userRouter from './routes/UserRouter'
+import toolsRouter from './routes/ToolsRouter'
+import userPreferenceRouter from './routes/userPreferencesRouter'
+import galleryRouter from './routes/GalleryRouter'
 
 // Middleware:
 import { errorHandler } from './middleware/errorHandler'
 
 // Utils:
 import { sendResponse } from './utils/utils'
-import toolsRouter from './routes/ToolsRouter'
-import userPreferenceRouter from './routes/userPreferencesRouter'
 
 
 /** APP **/
@@ -35,6 +36,7 @@ app.use('/api/users', userRouter)
 app.use('/api/services', servicesRouter)
 app.use('/api/tools', toolsRouter)
 app.use('/api/userPreferences', userPreferenceRouter)
+app.use('/api/gallery', galleryRouter)
 
 app.use('/healthy', (req: Request, res: Response) => {
   return sendResponse(req, res, 'OK', 200)

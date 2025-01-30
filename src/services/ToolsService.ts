@@ -1,11 +1,9 @@
 import { In } from 'typeorm'
 import { AppDataSource } from '../config/data-source'
-import { Services } from '../entities/Services'
 import { Tools } from '../entities/Tools'
 
 export class ToolsService {
   private toolsRepository = AppDataSource.getRepository(Tools)
-  private servicesRepository = AppDataSource.getRepository(Services)
 
   async getTools(): Promise<Tools[] | null> {
     return this.toolsRepository.find({
@@ -55,9 +53,5 @@ export class ToolsService {
 
   async getToolsByIds(toolsIds: string[]): Promise<Tools[]> {
     return this.toolsRepository.findBy({ uid: In(toolsIds)})
-  }
-
-  async getServicesByIds(serviceIds: string[]): Promise<Services[]> {
-    return this.servicesRepository.findBy({ uid: In(serviceIds) })
   }
 }

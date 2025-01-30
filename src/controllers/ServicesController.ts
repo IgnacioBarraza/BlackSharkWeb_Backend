@@ -38,7 +38,7 @@ export class ServiceController {
   async createService(req: Request, res: Response, next: NextFunction) {
     try {
       const parsedData = ServiceDto.parse(req.body)
-      const tools = parsedData.tools ? await this.servicesService.getToolsByIds(parsedData.tools) : []
+      const tools = parsedData.tools ? await this.toolsService.getToolsByIds(parsedData.tools) : []
       const toolsMap = new Map()
       tools.forEach(tool => toolsMap.set(tool.uid, tool))
       const parsedTools = Array.from(toolsMap.values())
@@ -79,7 +79,7 @@ export class ServiceController {
         price: parsedData.price ?? existingService.price,
         imageUrl: parsedData.imageUrl ?? existingService.imageUrl,
         recommended: parsedData.recommended ?? existingService.recommended,
-        tools: parsedData.tools ? await this.servicesService.getToolsByIds(parsedData.tools) : existingService.tools
+        tools: parsedData.tools ? await this.toolsService.getToolsByIds(parsedData.tools) : existingService.tools
       }
 
       const updatedService = await this.servicesService.updateService(uid, updatedData)

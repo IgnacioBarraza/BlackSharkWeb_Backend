@@ -40,7 +40,7 @@ export class ServicesService {
     return true
   }
 
-  async getToolsByIds(toolIds: string[]): Promise<Tools[]> {
-    return this.toolsRepository.findBy({ uid: In(toolIds) });
+  async getServicesByIds(serviceIds: string[]): Promise<Services[]> {
+    return this.serviceRepository.findBy({ uid: In(serviceIds) })
   }
 }

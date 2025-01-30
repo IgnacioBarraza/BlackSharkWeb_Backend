@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 'typeorm'
 import { Tools } from './Tools';
+import { Gallery } from './Gallery';
 
 @Entity()
 export class Services {
@@ -21,7 +22,10 @@ export class Services {
   @Column()
   recommended!: boolean;
 
-  @ManyToMany(() => Tools, (tools) =>tools.services)
+  @ManyToMany(() => Tools, (tools) => tools.services)
   @JoinTable()
   tools!: Tools[]
+
+  @ManyToMany(() => Gallery, (gallery) => gallery.services)
+  gallery!: Gallery[]
 }

@@ -57,5 +57,3 @@ AppDataSource.initialize().then(() => {
 }).catch((err) => {
   console.log('Error connecting to database: ', err)
 })
-
-export default app

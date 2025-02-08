@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 'typeorm'
 import { Tools } from './Tools';
 import { Gallery } from './Gallery';
+import { Colaborations } from './Colaborations';
 
 @Entity()
 export class Services {
@@ -28,4 +29,7 @@ export class Services {
 
   @ManyToMany(() => Gallery, (gallery) => gallery.services)
   gallery!: Gallery[]
+
+  @ManyToMany(() => Colaborations, colab => colab.services)
+  colaborations!: Colaborations[]
 }

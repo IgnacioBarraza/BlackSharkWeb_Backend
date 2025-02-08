@@ -107,9 +107,8 @@ export class ToolsController {
 
       const updatedTool = await this.toolsService.updateTool(uid, updatedData)
 
-      if (!updatedTool) {
-        return next(new CustomError('Tool not found', 404))
-      }
+      if (!updatedTool) return next(new CustomError('Tool not found', 404))
+      
       sendResponse(req, res, updatedTool, 200)
     } catch (error) {
       if (error instanceof ZodError) {

@@ -13,6 +13,7 @@ import userRouter from './routes/UserRouter'
 import toolsRouter from './routes/ToolsRouter'
 import userPreferenceRouter from './routes/userPreferencesRouter'
 import galleryRouter from './routes/GalleryRouter'
+import colabRouter from './routes/ColaborationRouter'
 
 // Middleware:
 import { errorHandler } from './middleware/errorHandler'
@@ -37,6 +38,7 @@ app.use('/api/services', servicesRouter)
 app.use('/api/tools', toolsRouter)
 app.use('/api/userPreferences', userPreferenceRouter)
 app.use('/api/gallery', galleryRouter)
+app.use('/api/colaborations', colabRouter)
 
 app.use('/healthy', (req: Request, res: Response) => {
   return sendResponse(req, res, 'OK', 200)

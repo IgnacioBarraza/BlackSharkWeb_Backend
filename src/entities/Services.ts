@@ -16,7 +16,7 @@ export class Services {
   @Column()
   price!: number;
 
-  @Column()
+  @Column('text')
   imageUrl!: string;
 
   @Column()

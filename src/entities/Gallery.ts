@@ -6,7 +6,7 @@ export class Gallery {
   @PrimaryGeneratedColumn('uuid')
   uid!: string
 
-  @Column()
+  @Column('text')
   imageUrl!: string
 
   @ManyToMany(() => Services, (services) => services.gallery)

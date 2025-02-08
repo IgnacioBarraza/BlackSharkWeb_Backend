@@ -15,7 +15,7 @@ export class Tools {
   @Column()
   type!: string;
 
-  @Column()
+  @Column('text')
   imageUrl!: string;
 
   @ManyToMany(() => Services, (service) => service.tools)

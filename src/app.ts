@@ -1,51 +1,61 @@
-import express from 'express'
+import express, { Request, Response } from 'express'
+import { json, urlencoded } from 'body-parser'
+import { AppDataSource } from './config/data-source'
+import { config } from "dotenv"
 import cors from 'cors'
+import morgan from 'morgan'
 
-// Routers:
-import loginRouter from './routes/loginRouter'
-import userRouter from './routes/userRouter'
-import galleryRouter from './routes/galleryRouter'
-import campaignRouter from './routes/campaignRouter'
-import mediaRouter from './routes/mediaRouter'
-import serviceRouter from './routes/serviceRouter'
-import cartRouter from './routes/shoppingCart'
-import dataRouter from './routes/getData'
-import equipmentRouter from './routes/equipmentRouter'
-import collabsRouter from './routes/collabsRouter'
-import buymentRouter from './routes/buymentRouter'
+/** IMPORTS **/
+
+// Routes:
+import servicesRouter from './routes/ServicesRouter'
+import userRouter from './routes/UserRouter'
+import toolsRouter from './routes/ToolsRouter'
+import userPreferenceRouter from './routes/userPreferencesRouter'
+import galleryRouter from './routes/GalleryRouter'
+import colabRouter from './routes/ColaborationRouter'
 
 // Middleware:
-import verifyToken from './middleware/verifyToken'
+import { errorHandler } from './middleware/errorHandler'
 
 // Utils:
-import { rateLimiter } from './utils/rate-limiter'
-import { slowDownLimiter } from './utils/slow-down'
-import metricsRouter from './routes/metricsRouter'
-import messageRouter from './routes/messageRouter'
+import { sendResponse } from './utils/utils'
 
+
+/** APP **/
+config()
 const app = express()
 
-app.use(express.json())
+/** MIDDLEWARES **/
+app.use(json())
 app.use(cors())
+app.use(urlencoded({ extended: true }))
+app.use(morgan('dev'))
 
-app.use(rateLimiter)
-app.use(slowDownLimiter)
-
-app.use('/api/login', loginRouter)
-app.use('/api/get', dataRouter)
-app.use('/api/message', messageRouter)
-
-app.use('', verifyToken)
-
+/** ROUTES **/
 app.use('/api/users', userRouter)
+app.use('/api/services', servicesRouter)
+app.use('/api/tools', toolsRouter)
+app.use('/api/userPreferences', userPreferenceRouter)
 app.use('/api/gallery', galleryRouter)
-app.use('/api/campaign', campaignRouter)
-app.use('/api/media', mediaRouter)
-app.use('/api/service', serviceRouter)
-app.use('/api/cart', cartRouter)
-app.use('/api/equipment', equipmentRouter)
-app.use('/api/collaborations', collabsRouter)
-app.use('/api/buyment', buymentRouter)
-app.use('/api/metrics', metricsRouter)
+app.use('/api/colaborations', colabRouter)
 
-export default app
+app.use('/healthy', (req: Request, res: Response) => {
+  return sendResponse(req, res, 'OK', 200)
+})
+
+
+/** ERROR HANDLING **/
+app.use(errorHandler);
+
+/** SERVER **/
+const PORT = process.env.PORT || 4000;
+
+AppDataSource.initialize().then(() => {
+  console.log('Database initialized and connected')
+  app.listen(PORT, () => {
+    console.log(`🚀🚀 Server running on port: ${PORT} 🚀🚀`);
+  });
+}).catch((err) => {
+  console.log('Error connecting to database: ', err)
+})

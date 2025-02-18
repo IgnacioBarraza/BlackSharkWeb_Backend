@@ -3,7 +3,7 @@ import { sendResponse } from '../utils/utils'
 import { ToolsService } from '../services/ToolsService'
 import { CustomError } from '../middleware/errorHandler'
 import { ZodError } from 'zod'
-import { ToolsDto } from '../dtos/Tools'
+import { ToolsDto } from '../validators/Tools'
 import { ServicesService } from '../services/ServicesService'
 
 export class ToolsController {

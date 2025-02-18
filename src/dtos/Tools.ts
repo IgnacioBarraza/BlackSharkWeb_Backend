@@ -1,11 +1,23 @@
-import { array, object, string, z } from 'zod'
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm'
+import { Services } from './Services'
 
-export const ToolsDto = object({
-  name: string({ required_error: 'Tool name is required'}).min(1, 'Name must be at least 1 character long').max(250, 'Name must be at most 250 characters long'),
-  description: string({ required_error: 'Tool description is required'}).min(1, 'Description must be at least 1 character long').max(250, 'Description must be at most 250 characters long'),
-  type: string({ required_error: 'tool type is required'}),
-  imageUrl: string({ required_error: 'Tool image is required'}).min(1, 'Image must be at least 1 character long').max(250, 'Image must be at most 250 characters long'),
-  services: array(string().uuid())
-})
+@Entity()
+export class Tools {
+  @PrimaryGeneratedColumn('uuid')
+  uid!: string;
 
-export type ToolsDtoType = z.infer<typeof ToolsDto>
+  @Column()
+  name!: string;
+
+  @Column()
+  description!: string;
+
+  @Column()
+  type!: string;
+
+  @Column('text')
+  imageUrl!: string;
+
+  @ManyToMany(() => Services, (service) => service.tools)
+  services!: Services[]
+}

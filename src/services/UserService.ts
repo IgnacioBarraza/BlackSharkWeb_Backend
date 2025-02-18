@@ -1,5 +1,5 @@
 import { AppDataSource } from '../config/data-source'
-import { User } from '../entities/User'
+import { User } from '../dtos/User'
 
 export class UserService {
   private userRepository = AppDataSource.getRepository(User)

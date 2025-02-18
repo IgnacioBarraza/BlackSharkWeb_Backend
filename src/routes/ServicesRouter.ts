@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { ServiceController } from '../controllers/ServicesController'
 import { validationMiddleware } from '../middleware/validationMiddleware'
-import { ServiceDto } from '../dtos/Services'
+import { ServiceDto } from '../validators/Services'
 import { authenticateToken, authorizeRole } from '../middleware/validateUser'
 
 const servicesRouter = Router()

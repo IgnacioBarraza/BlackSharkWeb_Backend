@@ -1,5 +1,5 @@
 import { AppDataSource } from "../config/data-source";
-import { Colaborations } from "../entities/Colaborations";
+import { Colaborations } from "../dtos/Colaborations";
 
 export class ColaborationsService {
   private colabRepository = AppDataSource.getRepository(Colaborations)

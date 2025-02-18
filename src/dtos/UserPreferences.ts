@@ -1,8 +1,23 @@
-import { object, string, boolean } from 'zod'
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm'
+import { User } from './User'
 
-export const UserPreferencesDto = object({
-  theme: string().min(1, 'Theme must be at least 1 character long').max(250, 'Theme must be at most 250 characters long').default('light'),
-  lang: string().min(1, 'Language must be at least 1 character long').max(250, 'Language must be at most 250 characters long').default('es'),
-  notificationsEnabled: boolean(),
-  notificationsType: string(),
-})
+@Entity()
+export class UserPreferences {
+  @PrimaryGeneratedColumn('uuid')
+  uid!: string
+
+  @Column()
+  theme!: string
+
+  @Column()
+  lang!: string
+
+  @Column()
+  notificationsEnabled!: boolean
+
+  @Column()
+  notificationsType!: string
+
+  @OneToOne(() => User , (user) => user.userPreferences)
+  user!: User
+}

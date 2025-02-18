@@ -4,7 +4,7 @@ import { CustomError } from '../middleware/errorHandler'
 import { ZodError } from 'zod'
 import { GalleryService } from '../services/GalleryService'
 import { ServicesService } from '../services/ServicesService'
-import { GalleryDto } from '../dtos/Gallery'
+import { GalleryDto } from '../validators/Gallery'
 
 export class GalleryController {
   private galleryService: GalleryService

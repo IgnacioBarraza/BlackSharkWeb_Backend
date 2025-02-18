@@ -1,6 +1,6 @@
 import { In } from 'typeorm'
 import { AppDataSource } from '../config/data-source'
-import { Tools } from '../entities/Tools'
+import { Tools } from '../dtos/Tools'
 
 export class ToolsService {
   private toolsRepository = AppDataSource.getRepository(Tools)

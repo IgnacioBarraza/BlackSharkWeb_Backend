@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { sendResponse } from '../utils/utils'
 import { ServicesService } from '../services/ServicesService'
 import { CustomError } from '../middleware/errorHandler'
-import { ServiceDto } from '../dtos/Services'
+import { ServiceDto } from '../validators/Services'
 import { ZodError } from 'zod'
 import { ToolsService } from '../services/ToolsService'
 

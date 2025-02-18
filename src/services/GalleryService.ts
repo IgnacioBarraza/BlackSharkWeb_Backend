@@ -1,5 +1,5 @@
 import { AppDataSource } from '../config/data-source'
-import { Gallery } from '../entities/Gallery'
+import { Gallery } from '../dtos/Gallery'
 
 export class GalleryService {
   private galleryRepository = AppDataSource.getRepository(Gallery)

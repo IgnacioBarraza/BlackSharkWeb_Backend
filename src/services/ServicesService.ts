@@ -1,6 +1,6 @@
 import { AppDataSource } from '../config/data-source'
-import { Services } from '../entities/Services'
-import { Tools } from '../entities/Tools'
+import { Services } from '../dtos/Services'
+import { Tools } from '../dtos/Tools'
 import { In } from 'typeorm'
 
 export class ServicesService {

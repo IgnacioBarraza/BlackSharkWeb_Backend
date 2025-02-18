@@ -1,5 +1,5 @@
 import { AppDataSource } from '../config/data-source'
-import { UserPreferences } from '../entities/UserPreferences'
+import { UserPreferences } from '../dtos/UserPreferences'
 
 export class UserPreferencesService {
   private userPreferencesRepository = AppDataSource.getRepository(UserPreferences)

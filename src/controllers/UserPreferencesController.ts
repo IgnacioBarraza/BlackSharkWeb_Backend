@@ -3,7 +3,7 @@ import { UserPreferencesService } from '../services/UserPreferencesService'
 import { sendResponse } from '../utils/utils'
 import { CustomError } from '../middleware/errorHandler'
 import { ZodError } from 'zod'
-import { UserPreferencesDto } from '../dtos/UserPreferences'
+import { UserPreferencesDto } from '../validators/UserPreferences'
 
 export class UserPreferencesController {
   private userPreferencesService: UserPreferencesService;

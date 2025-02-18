@@ -6,10 +6,10 @@ import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 import { config } from 'dotenv'
 import { sendResponse } from '../utils/utils'
-import { UserDto } from '../dtos/User'
+import { UserDto } from '../validators/User'
 import { ZodError } from 'zod'
 import sendMessage from '../config/emailConfig'
-import { User } from '../entities/User'
+import { User } from '../dtos/User'
 
 config()
 const { JWT_SECRET } = process.env

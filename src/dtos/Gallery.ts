@@ -1,8 +1,15 @@
-import { array, object, string, z } from "zod";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 'typeorm'
+import { Services } from './Services'
 
-export const GalleryDto = object({
-  imageUrl: string({ required_error: 'Image url is required'}),
-  services: array(string().uuid())
-})
+@Entity()
+export class Gallery {
+  @PrimaryGeneratedColumn('uuid')
+  uid!: string
 
-export type GalleryDtoType = z.infer<typeof GalleryDto>
+  @Column('text')
+  imageUrl!: string
+
+  @ManyToMany(() => Services, (services) => services.gallery)
+  @JoinTable()
+  services!: Services[]
+}

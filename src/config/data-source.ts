@@ -14,7 +14,7 @@ export const AppDataSource = new DataSource({
   database: DB_NAME,
   synchronize: true,
   logging: false,
-  entities: ['src/entities/*.ts'],
+  entities: ['src/dtos/*.ts'],
 })
 
 export const initializeDataSource = async () => {
